@@ -4,6 +4,7 @@ import com.dissertationProject.OnlineCourse.Dto.UserDto;
 import com.dissertationProject.OnlineCourse.Dto.UserLoginDto;
 import com.dissertationProject.OnlineCourse.Model.User;
 import com.dissertationProject.OnlineCourse.Repository.UserRepo;
+import com.dissertationProject.OnlineCourse.Security.JwtUtils;
 import com.dissertationProject.OnlineCourse.Service.UserService;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,25 +31,17 @@ public class UserLoginServiceImpl implements UserService {
 
     @Override
     public String loginUser(UserLoginDto userLoginDto) throws Exception {
-        return null;
-    }
-
-    public String loginUser(String email, String password) throws Exception {
-        Optional<User> userOpt = userRepo.findByEmail(email);
+        Optional<User> userOpt = userRepo.findByEmail(userLoginDto.getEmail());
         if(!userOpt.isPresent()) {
             throw new Exception("User not found");
         }
         User user = userOpt.get();
-        if(!user.getPassword().matches(user.getPassword())) {
+        if(!userLoginDto.getPassword().matches(user.getPassword())) {
             throw new Exception("Invalid password");
         }
-        //Generate JWT token
-        String token = generateToken(user);
+
+        String token = JwtUtils.generateToken(user);
         return token;
     }
 
-    private String generateToken(User user) {
-        // Generate JWT token using a library like jjwt (not shown)
-        return "generated-jwt-token";
-    }
 }
