@@ -8,11 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "FrontendCourse")
+@Document(collection = "BackendCourse")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Courses {
+public class BackendCourse {
     @Id
     private String id;
     private String courseName;
@@ -24,17 +24,4 @@ public class Courses {
     private String language;
     private String postedDate;
     private List<Video> videos;
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Video {
-        private String videoId;
-        private String videoTitle;
-        private String videoDescription;
-        private String videoUrl;
-        private String duration;
-        private Integer order;
-        private String resourceUrl;
-
-    }
 }

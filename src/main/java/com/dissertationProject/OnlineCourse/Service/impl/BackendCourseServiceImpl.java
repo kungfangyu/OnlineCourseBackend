@@ -1,9 +1,9 @@
 package com.dissertationProject.OnlineCourse.Service.impl;
 
-import com.dissertationProject.OnlineCourse.Dto.FrontendCourseDto;
-import com.dissertationProject.OnlineCourse.Model.FrontendCourse;
-import com.dissertationProject.OnlineCourse.Repository.FrontendRepo;
-import com.dissertationProject.OnlineCourse.Service.FrontendCourseService;
+import com.dissertationProject.OnlineCourse.Dto.BackendCourseDto;
+import com.dissertationProject.OnlineCourse.Model.BackendCourse;
+import com.dissertationProject.OnlineCourse.Repository.BackendRepo;
+import com.dissertationProject.OnlineCourse.Service.BackendCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FrontendCourseServiceImpl implements FrontendCourseService {
+public class BackendCourseServiceImpl implements BackendCourseService {
     @Autowired
-    private FrontendRepo frontendRepo;
+    private BackendRepo backendRepo;
 
     @Override
-    public List<FrontendCourseDto> getAllFrontendCourses() {
-        List<FrontendCourse> courses = frontendRepo.findAll();
+    public List<BackendCourseDto> getAllBackendCourses() {
+        List<BackendCourse> courses = backendRepo.findAll();
         return courses.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    private FrontendCourseDto convertToDto(FrontendCourse course) {
-        FrontendCourseDto dto = new FrontendCourseDto();
+    private BackendCourseDto convertToDto(BackendCourse course) {
+        BackendCourseDto dto = new BackendCourseDto();
         dto.setId(course.getId());
         dto.setCourseName(course.getCourseName());
         dto.setDescription(course.getDescription());
