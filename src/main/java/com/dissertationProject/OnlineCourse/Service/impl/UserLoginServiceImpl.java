@@ -6,7 +6,6 @@ import com.dissertationProject.OnlineCourse.Model.User;
 import com.dissertationProject.OnlineCourse.Repository.UserRepo;
 import com.dissertationProject.OnlineCourse.Security.JwtUtils;
 import com.dissertationProject.OnlineCourse.Service.UserService;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,6 @@ import java.util.Optional;
 public class UserLoginServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
-
 
     @Override
     public User registerUser(UserDto userDto) throws Exception{
