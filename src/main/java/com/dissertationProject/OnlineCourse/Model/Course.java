@@ -8,13 +8,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "BackendCourse")
+@Document(collection = "Course")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BackendCourse {
+public class Course {
     @Id
-    private String id;
+    private String courseId;
     private String courseName;
     private String description;
     private String instructor;
@@ -23,5 +23,7 @@ public class BackendCourse {
     private String imageUrl;
     private String language;
     private String postedDate;
+    private Boolean isAdd;
+
     private List<Video> videos;
 }

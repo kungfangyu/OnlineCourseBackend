@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BackendCourseDto {
-    private String id;
+public class CourseDto {
+    private String courseId;
     private String courseName;
     private String description;
     private String instructor;
@@ -20,5 +20,7 @@ public class BackendCourseDto {
     private String imageUrl;
     private String language;
     private String postedDate;
-    private List<Video> videoList = new ArrayList<>();
+    private Boolean isAdd;
+    private String category;
+    private List<Video> videos = new ArrayList<>();
 }

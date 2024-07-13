@@ -1,13 +1,13 @@
 package com.dissertationProject.OnlineCourse.Controller;
 
-import com.dissertationProject.OnlineCourse.Dto.BackendCourseDto;
-import com.dissertationProject.OnlineCourse.Dto.FrontendCourseDto;
-import com.dissertationProject.OnlineCourse.Service.BackendCourseService;
-import com.dissertationProject.OnlineCourse.Service.FrontendCourseService;
+import com.dissertationProject.OnlineCourse.Dto.CourseDto;
+import com.dissertationProject.OnlineCourse.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,20 +16,17 @@ import java.util.List;
 @RequestMapping("/api/course")
 public class CourseController {
     @Autowired
-    private FrontendCourseService frontendCourseService;
-    @Autowired
-    private BackendCourseService backendCourseService;
+    private CourseService courseService;
 
-    @GetMapping("/frontend")
-    public ResponseEntity<List<FrontendCourseDto>> getAllFrontendCourses() {
-        List<FrontendCourseDto> courses = frontendCourseService.getAllFrontendCourses();
-        return ResponseEntity.ok(courses);
+    @GetMapping
+    public ResponseEntity<List<CourseDto>> getAllCourses() {
+        List<CourseDto> courses = courseService.getAllCourses();
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
-
-    @GetMapping("/backend")
-    public ResponseEntity<List<BackendCourseDto>> getAllBackendCourses() {
-        List<BackendCourseDto> courses = backendCourseService.getAllBackendCourses();
-        return ResponseEntity.ok(courses);
+    @GetMapping("/category")
+    public ResponseEntity<List<CourseDto>> getCoursesByCategory(@RequestParam String category) {
+        List<CourseDto> courses = courseService.getCoursesByCategory(category);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
 }
