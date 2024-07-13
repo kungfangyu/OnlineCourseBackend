@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CourseRepo extends MongoRepository<Course, String> {
     List<Course> findByCategory(String category);
+
 }

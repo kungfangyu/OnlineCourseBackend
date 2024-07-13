@@ -2,7 +2,9 @@ package com.dissertationProject.OnlineCourse.Service.impl;
 
 import com.dissertationProject.OnlineCourse.Dto.CourseDto;
 import com.dissertationProject.OnlineCourse.Model.Course;
+import com.dissertationProject.OnlineCourse.Model.WatchList;
 import com.dissertationProject.OnlineCourse.Repository.CourseRepo;
+import com.dissertationProject.OnlineCourse.Repository.WatchListRepo;
 import com.dissertationProject.OnlineCourse.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,28 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepo courseRepo;
 
+    @Autowired
+    private WatchListRepo watchListRepo;
+
     @Override
     public List<CourseDto> getAllCourses() {
         List<Course> courses = courseRepo.findAll();
-        return courses.stream().map(this::convertToDto).collect(Collectors.toList());
+        return courses.stream().map(course -> {
+            CourseDto dto = convertToDto(course);
+            dto.setIsAdd(false); // all courses 'isAdd' are false
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseDto> getAllCoursesByUserId(String userId) {
+        List<Course> courses = courseRepo.findAll();
+        List<WatchList> watchListItems = watchListRepo.findByUserId(userId);
+        return courses.stream().map(course -> {
+            CourseDto dto = convertToDto(course);
+            dto.setIsAdd(watchListItems.stream().anyMatch(watchListItem -> watchListItem.getCourseId().equals(course.getCourseId())));
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @Override

@@ -8,5 +8,7 @@ import java.util.List;
 @Service
 public interface CourseService {
     List<CourseDto> getAllCourses();
+
+    List<CourseDto> getAllCoursesByUserId(String userId);
     List<CourseDto> getCoursesByCategory(String category);
 }

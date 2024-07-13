@@ -9,6 +9,7 @@ import com.dissertationProject.OnlineCourse.Service.WatchListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,6 +48,11 @@ public class WatchListServiceImpl implements WatchListService {
         watchlistItem.setVideos(courseDto.getVideos());
 
         return watchListRepo.save(watchlistItem);
+    }
+
+    @Override
+    public List<WatchList> getWatchListByUserId(String userId) {
+        return watchListRepo.findByUserId(userId);
     }
 
     private CourseDto convertToCourseDto(Course course) {
