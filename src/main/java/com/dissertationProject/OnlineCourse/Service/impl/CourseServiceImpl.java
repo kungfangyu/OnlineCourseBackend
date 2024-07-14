@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,10 +34,14 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseDto> getAllCoursesByUserId(String userId) {
         List<Course> courses = courseRepo.findAll();
-        List<WatchList> watchListItems = watchListRepo.findByUserId(userId);
+        Optional<WatchList> watchListOptional = watchListRepo.findById(userId);
+        WatchList watchList = watchListOptional.orElse(new WatchList());
+
         return courses.stream().map(course -> {
             CourseDto dto = convertToDto(course);
-            dto.setIsAdd(watchListItems.stream().anyMatch(watchListItem -> watchListItem.getCourseId().equals(course.getCourseId())));
+            boolean isAdded = watchList.getItems().stream()
+                    .anyMatch(watchListItem -> watchListItem.getCourseId().equals(course.getCourseId()));
+            dto.setIsAdd(isAdded);
             return dto;
         }).collect(Collectors.toList());
     }

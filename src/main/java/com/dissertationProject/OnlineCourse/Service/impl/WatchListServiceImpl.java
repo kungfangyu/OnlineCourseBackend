@@ -1,16 +1,21 @@
 package com.dissertationProject.OnlineCourse.Service.impl;
 
 import com.dissertationProject.OnlineCourse.Dto.CourseDto;
+import com.dissertationProject.OnlineCourse.Dto.WatchListDto;
+import com.dissertationProject.OnlineCourse.Dto.WatchListItemDto;
 import com.dissertationProject.OnlineCourse.Model.Course;
 import com.dissertationProject.OnlineCourse.Model.WatchList;
+import com.dissertationProject.OnlineCourse.Model.WatchListItem;
 import com.dissertationProject.OnlineCourse.Repository.CourseRepo;
 import com.dissertationProject.OnlineCourse.Repository.WatchListRepo;
 import com.dissertationProject.OnlineCourse.Service.WatchListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WatchListServiceImpl implements WatchListService {
@@ -28,31 +33,114 @@ public class WatchListServiceImpl implements WatchListService {
         }
         Course course = courseOptional.get();
         CourseDto courseDto = convertToCourseDto(course);
-        return addCourseToUserWatchlist(userId, courseDto);
+
+        Optional<WatchList> watchListOptional = watchListRepo.findById(userId);
+        WatchList watchList;
+        if (watchListOptional.isPresent()) {
+            watchList = watchListOptional.get();
+        } else {
+            watchList = new WatchList();
+            watchList.setUserId(userId);
+            watchList.setItems(new ArrayList<>());
+        }
+
+        WatchListItem watchListItem = new WatchListItem();
+        watchListItem.setCourseId(courseDto.getCourseId());
+        watchListItem.setCourseName(courseDto.getCourseName());
+        watchListItem.setDescription(courseDto.getDescription());
+        watchListItem.setInstructor(courseDto.getInstructor());
+        watchListItem.setInstructorInfo(courseDto.getInstructorInfo());
+        watchListItem.setCategory(courseDto.getCategory());
+        watchListItem.setImageUrl(courseDto.getImageUrl());
+        watchListItem.setLanguage(courseDto.getLanguage());
+        watchListItem.setPostedDate(courseDto.getPostedDate());
+        watchListItem.setIsAdd(true);
+        watchListItem.setVideos(courseDto.getVideos());
+
+        watchList.getItems().add(watchListItem);
+        return watchListRepo.save(watchList);
     }
 
-    private WatchList addCourseToUserWatchlist(String userId, CourseDto courseDto) {
 
-        WatchList watchlistItem = new WatchList();
-        watchlistItem.setCourseId(courseDto.getCourseId());
-        watchlistItem.setUserId(userId);
-        watchlistItem.setCourseName(courseDto.getCourseName());
-        watchlistItem.setDescription(courseDto.getDescription());
-        watchlistItem.setInstructor(courseDto.getInstructor());
-        watchlistItem.setInstructorInfo(courseDto.getInstructorInfo());
-        watchlistItem.setCategory(courseDto.getCategory());
-        watchlistItem.setImageUrl(courseDto.getImageUrl());
-        watchlistItem.setLanguage(courseDto.getLanguage());
-        watchlistItem.setPostedDate(courseDto.getPostedDate());
-        watchlistItem.setIsAdd(true); // default is true
-        watchlistItem.setVideos(courseDto.getVideos());
-
-        return watchListRepo.save(watchlistItem);
+    @Override
+    public WatchListDto getWatchListByUserId(String userId) {
+        Optional<WatchList> watchListOptional = watchListRepo.findById(userId);
+        if(watchListOptional.isPresent()){
+            WatchList watchList = watchListOptional.get();
+            if(watchList.getItems() == null){
+                watchList.setItems(new ArrayList<>());
+            }
+            return convertToWatchListDto(watchList);
+        }else {
+            WatchListDto emptyWatchListDto = new WatchListDto();
+            emptyWatchListDto.setUserId(userId);
+            emptyWatchListDto.setItems(new ArrayList<>());
+            return emptyWatchListDto;
+        }
     }
 
     @Override
-    public List<WatchList> getWatchListByUserId(String userId) {
-        return watchListRepo.findByUserId(userId);
+    public List<CourseDto> getAllCoursesByUserId(String userId) {
+        List<Course> courses = courseRepo.findAll();
+
+        // 查找用户的 WatchList
+        Optional<WatchList> watchListOptional = watchListRepo.findById(userId);
+        WatchList watchList = watchListOptional.orElseGet(() -> {
+            WatchList newWatchList = new WatchList();
+            newWatchList.setUserId(userId);
+            newWatchList.setItems(new ArrayList<>());
+            return newWatchList;
+        });
+
+        if (watchList.getItems() == null) {
+            watchList.setItems(new ArrayList<>());
+        }
+
+        // 遍历课程并设置 isAdd 字段
+        return courses.stream().map(course -> {
+            CourseDto dto = convertToCourseDto(course);
+            boolean isAdded = watchList.getItems().stream()
+                    .anyMatch(watchListItem -> watchListItem.getCourseId().equals(course.getCourseId()));
+            dto.setIsAdd(isAdded);
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public WatchList removeCourseFromWatchList(String userId, String courseId) {
+        Optional<WatchList> watchListOptional = watchListRepo.findById(userId);
+        if (!watchListOptional.isPresent()) {
+            throw new RuntimeException("WatchList not found for user:" + userId);
+        }
+        WatchList watchList = watchListOptional.get();
+        List<WatchListItem> items = watchList.getItems();
+        items.removeIf(item -> item.getCourseId().equals(courseId));
+        watchList.setItems(items);
+        return watchListRepo.save(watchList);
+    }
+
+
+    private WatchListDto convertToWatchListDto(WatchList watchList) {
+        WatchListDto dto = new WatchListDto();
+        dto.setUserId(watchList.getUserId());
+        dto.setItems(watchList.getItems().stream().map(this::convertToWatchListItemDto).collect(Collectors.toList()));
+        return dto;
+    }
+
+    private WatchListItemDto convertToWatchListItemDto(WatchListItem item) {
+        WatchListItemDto dto = new WatchListItemDto();
+        dto.setCourseId(item.getCourseId());
+        dto.setCourseName(item.getCourseName());
+        dto.setDescription(item.getDescription());
+        dto.setInstructor(item.getInstructor());
+        dto.setInstructorInfo(item.getInstructorInfo());
+        dto.setCategory(item.getCategory());
+        dto.setImageUrl(item.getImageUrl());
+        dto.setLanguage(item.getLanguage());
+        dto.setPostedDate(item.getPostedDate());
+        dto.setIsAdd(item.getIsAdd());
+        dto.setVideos(item.getVideos());
+        return dto;
     }
 
     private CourseDto convertToCourseDto(Course course) {

@@ -11,16 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class WatchListDto {
-    private String courseId;
     private String userId;
-    private String courseName;
-    private String description;
-    private String instructor;
-    private String instructorInfo;
-    private String category;
-    private String imageUrl;
-    private String language;
-    private String postedDate;
-    private Boolean isAdd;
-    private List<Video> videos;
+    private List<WatchListItemDto> items;
 }

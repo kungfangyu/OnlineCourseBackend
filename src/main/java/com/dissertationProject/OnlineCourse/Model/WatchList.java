@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "WatchList")
@@ -14,16 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class WatchList {
     @Id
-    private String courseId;
     private String userId;
-    private String courseName;
-    private String description;
-    private String instructor;
-    private String instructorInfo;
-    private String category;
-    private String imageUrl;
-    private String language;
-    private String postedDate;
-    private Boolean isAdd;
-    private List<Video> videos;
+    private List<WatchListItem> items = new ArrayList<>(); // WatchListItem is a class that contains the details of a course
 }
