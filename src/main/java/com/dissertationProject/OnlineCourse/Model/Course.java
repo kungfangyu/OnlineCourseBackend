@@ -26,4 +26,5 @@ public class Course {
     private Boolean isAdd;
 
     private List<Video> videos;
+    private List<Comment> comments;
 }
