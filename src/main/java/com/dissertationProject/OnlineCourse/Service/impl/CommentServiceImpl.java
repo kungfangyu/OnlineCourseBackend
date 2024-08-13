@@ -12,8 +12,11 @@ import com.dissertationProject.OnlineCourse.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentServiceImpl implements CommentService {
     @Autowired
@@ -25,41 +28,56 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private UserRepo userRepo;
 
+//    @Override
+//    public CommentDto addComment(String userId, String courseId, String content) {
+//        Comment comment = new Comment();
+//        comment.setUserId(userId);
+//        comment.setCourseId(courseId);
+//        comment.setContent(content);
+//
+//        Comment savedComment = commentRepo.save(comment);
+//
+//        Course course = courseRepo.findById(courseId).orElseThrow(
+//                () -> new RuntimeException("Course not found"));
+//        course.getComments().add(savedComment);
+//        courseRepo.save(course);
+//
+//        return convertToDto(savedComment);
+//    }
     @Override
-    public CommentDto addComment(String userId, String courseId, String content) {
+    public CommentDto addComment(String courseId, String userId,  String content) {
         Comment comment = new Comment();
         comment.setUserId(userId);
+        comment.setUserName(userRepo.getClass().getName());
         comment.setCourseId(courseId);
         comment.setContent(content);
-        comment.setCreatedDate(new Date());
+        comment.setPostedDate(LocalDateTime.now());
 
         Comment savedComment = commentRepo.save(comment);
-
-        Course course = courseRepo.findById(courseId).orElseThrow(
-                () -> new RuntimeException("Course not found"));
-        course.getComments().add(savedComment);
-        courseRepo.save(course);
-
         return convertToDto(savedComment);
     }
-
     @Override
     public List<CommentDto> getCommentsByCourseId(String courseId) {
         List<Comment> comments = commentRepo.findByCourseId(courseId);
-        return comments.stream().map(this::convertToDto).toList();
+        return comments.stream().map(this::convertToDto).collect(Collectors.toList());
     }
+
+//    @Override
+//    public List<CommentDto> getCommentsByCourseId(String courseId) {
+//        List<Comment> comments = commentRepo.findByCourseId(courseId);
+//        return comments.stream().map(this::convertToDto).toList();
+//    }
 
     private CommentDto convertToDto(Comment comment) {
         CommentDto dto = new CommentDto();
-        dto.setId(comment.getId());
-        dto.setUserId(comment.getUserId());
         dto.setCourseId(comment.getCourseId());
+        dto.setUserId(comment.getUserId());
         dto.setContent(comment.getContent());
-        dto.setCreatedDate(comment.getCreatedDate());
+        dto.setPostedDate(comment.getPostedDate());
         //Get user name from user id
          User user = userRepo.findById(comment.getUserId()).orElse(null);
          if (user != null) {
-             dto.setUserName(user.getLastName());
+             dto.setUserName(user.getFirstName());
          }
         return dto;
     }

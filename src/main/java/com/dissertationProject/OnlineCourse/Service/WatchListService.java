@@ -15,4 +15,5 @@ public interface WatchListService{
     List<CourseDto> getAllCoursesByUserId(String userId);
 
     WatchList removeCourseFromWatchList(String userId, String courseId);
+
 }

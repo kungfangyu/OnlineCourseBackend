@@ -29,6 +29,7 @@ public class WatchListServiceImpl implements WatchListService {
     public WatchList addCourseToWatchList(String userId, String courseId) {
         Optional<Course> courseOptional = courseRepo.findById(courseId);
         if (!courseOptional.isPresent()) {
+            System.out.println("Course not found for ID: " + courseId);
             throw new RuntimeException("Course not found");
         }
         Course course = courseOptional.get();
@@ -44,7 +45,16 @@ public class WatchListServiceImpl implements WatchListService {
             watchList.setItems(new ArrayList<>());
         }
 
+        for (WatchListItem item : watchList.getItems()) {
+            if (item.getCourseId().equals(courseDto.getCourseId())) {
+                throw new IllegalArgumentException("Course already in watchlist");
+            }
+        }
+
+
+
         WatchListItem watchListItem = new WatchListItem();
+
         watchListItem.setCourseId(courseDto.getCourseId());
         watchListItem.setCourseName(courseDto.getCourseName());
         watchListItem.setDescription(courseDto.getDescription());
@@ -57,6 +67,7 @@ public class WatchListServiceImpl implements WatchListService {
         watchListItem.setIsAdd(true);
         watchListItem.setVideos(courseDto.getVideos());
 
+        //Add to watchlist
         watchList.getItems().add(watchListItem);
         return watchListRepo.save(watchList);
     }

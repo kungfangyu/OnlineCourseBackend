@@ -23,4 +23,5 @@ public class CourseDto {
     private Boolean isAdd;
     private String category;
     private List<Video> videos = new ArrayList<>();
+    private List<CommentDto> comments;
 }

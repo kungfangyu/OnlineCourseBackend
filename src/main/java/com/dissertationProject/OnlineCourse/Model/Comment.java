@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Document(collection = "Comment")
@@ -14,9 +15,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class Comment {
     @Id
-    private String id;
-    private String userId;
     private String courseId;
+    private String userId;
     private String content;
-    private Date createdDate;
+    private LocalDateTime postedDate;
+    private String userName;
 }

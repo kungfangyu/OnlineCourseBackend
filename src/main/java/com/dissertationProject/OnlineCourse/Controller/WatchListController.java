@@ -8,15 +8,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/watchlist")
+@RequestMapping("/api/C")
 public class WatchListController {
     @Autowired
     private WatchListService watchListService;
 
     @PostMapping("/{userId}/addCourse")
     public ResponseEntity<WatchList> addCourseToWatchList(
-            @PathVariable String userId, String courseId, @RequestParam String category){
+            @PathVariable String userId,  @RequestBody Map<String, String> requestBody){
+        String courseId = requestBody.get("courseId");
         WatchList updatedWatchList = watchListService.addCourseToWatchList(userId, courseId);
         return new ResponseEntity<>(updatedWatchList, HttpStatus.OK);
     }
@@ -27,8 +30,11 @@ public class WatchListController {
         return new ResponseEntity<>(watchLists, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}/removeCourse")
-    public ResponseEntity<WatchList> removeCourseFromWatchList(@PathVariable String userId, @RequestParam String courseId) {
+
+    @DeleteMapping("/removeCourse")
+    public ResponseEntity<WatchList> removeCourseFromWatchList(@RequestBody Map<String, String> requestBody) {
+        String userId = requestBody.get("userId");
+        String courseId = requestBody.get("courseId");
         WatchList updatedWatchList = watchListService.removeCourseFromWatchList(userId, courseId);
         return new ResponseEntity<>(updatedWatchList, HttpStatus.OK);
     }

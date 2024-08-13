@@ -5,10 +5,7 @@ import com.dissertationProject.OnlineCourse.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,9 +28,9 @@ public class CourseController {
     * Get all courses by userId
      */
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<CourseDto>> getAllCoursesByUserId(@RequestParam String userId) {
-        List<CourseDto> courses = courseService.getAllCoursesByUserId(userId);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<CourseDto>> getAllCoursesByUserId(@PathVariable String userId, @RequestParam String category) {
+        List<CourseDto> courses = courseService.getAllCoursesByUserId(userId, category);
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
@@ -41,6 +38,22 @@ public class CourseController {
     public ResponseEntity<List<CourseDto>> getCoursesByCategory(@RequestParam String category) {
         List<CourseDto> courses = courseService.getCoursesByCategory(category);
         return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
+
+    @GetMapping("/{courseId}")
+    public ResponseEntity<CourseDto> getCourseById(@PathVariable String courseId) {
+        try {
+            CourseDto course = courseService.getCourseById(courseId);
+            if (course != null) {
+                return new ResponseEntity<>(course, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching course by ID: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

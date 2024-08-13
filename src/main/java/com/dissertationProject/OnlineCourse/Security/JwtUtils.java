@@ -25,10 +25,12 @@ public class JwtUtils {
         this.userService = userService;
     }
 
+
     public static String generateToken(User user) {
         Claims claims = Jwts.claims().setSubject(user.getEmail());
         claims.put("id", user.getUserId());
         claims.put("email", user.getEmail());
+        claims.put("firstName", user.getFirstName());
 
         return Jwts.builder()
                 .setClaims(claims)

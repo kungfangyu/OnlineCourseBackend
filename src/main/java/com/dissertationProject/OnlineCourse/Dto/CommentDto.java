@@ -3,6 +3,7 @@ package com.dissertationProject.OnlineCourse.Dto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -12,11 +13,10 @@ import java.util.Date;
 @Data
 public class CommentDto {
     @Id
-    private String id;
-    private String userId;
     private String courseId;
+    private String userId;
     private String content;
-    private Date createdDate;
     private String userName;
+    private LocalDateTime postedDate = LocalDateTime.now();
 
 }

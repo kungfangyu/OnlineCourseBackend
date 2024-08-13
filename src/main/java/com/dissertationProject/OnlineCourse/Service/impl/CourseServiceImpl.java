@@ -32,12 +32,13 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseDto> getAllCoursesByUserId(String userId) {
+    public List<CourseDto> getAllCoursesByUserId(String userId, String category) {
         List<Course> courses = courseRepo.findAll();
         Optional<WatchList> watchListOptional = watchListRepo.findById(userId);
         WatchList watchList = watchListOptional.orElse(new WatchList());
 
-        return courses.stream().map(course -> {
+        return courses.stream().filter(course -> course.getCategory().equalsIgnoreCase(category))
+                .map(course -> {
             CourseDto dto = convertToDto(course);
             boolean isAdded = watchList.getItems().stream()
                     .anyMatch(watchListItem -> watchListItem.getCourseId().equals(course.getCourseId()));
@@ -50,6 +51,16 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseDto> getCoursesByCategory(String category) {
         List<Course> courses = courseRepo.findByCategory(category);
         return courses.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public CourseDto getCourseById(String courseId) {
+        Course course = courseRepo.findByCourseId(courseId);
+        if (course != null) {
+            return convertToDto(course);
+        } else {
+            return null;
+        }
     }
 
     private CourseDto convertToDto(Course course) {
