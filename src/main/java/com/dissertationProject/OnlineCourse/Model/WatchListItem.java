@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// This class is a model for the WatchListItem entity. It contains the attributes of the WatchListItem entity.
 public class WatchListItem {
     private String courseId;
     private String courseName;

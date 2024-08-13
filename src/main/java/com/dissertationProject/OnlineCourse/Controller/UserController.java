@@ -21,6 +21,10 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    /*
+     * Register of user
+     */
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto) {
         try {
@@ -30,6 +34,8 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // Exception handling for validation errors
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -42,6 +48,10 @@ public class UserController {
         });
         return errors;
     }
+
+    /*
+     * Login of user
+     */
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserLoginDto userLoginDto) {

@@ -13,7 +13,6 @@ public interface WatchListService{
     WatchListDto getWatchListByUserId(String userId);
 
     List<CourseDto> getAllCoursesByUserId(String userId);
-
     WatchList removeCourseFromWatchList(String userId, String courseId);
 
 }

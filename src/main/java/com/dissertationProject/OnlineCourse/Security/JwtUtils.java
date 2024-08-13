@@ -25,7 +25,7 @@ public class JwtUtils {
         this.userService = userService;
     }
 
-
+    // This method generates a JWT token for the user
     public static String generateToken(User user) {
         Claims claims = Jwts.claims().setSubject(user.getEmail());
         claims.put("id", user.getUserId());

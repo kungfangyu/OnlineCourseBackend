@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/C")
+@RequestMapping("/api/watchlist")
 public class WatchListController {
     @Autowired
     private WatchListService watchListService;
 
+    /*
+     * Add course to watchlist
+     */
     @PostMapping("/{userId}/addCourse")
     public ResponseEntity<WatchList> addCourseToWatchList(
             @PathVariable String userId,  @RequestBody Map<String, String> requestBody){
@@ -24,13 +27,19 @@ public class WatchListController {
         return new ResponseEntity<>(updatedWatchList, HttpStatus.OK);
     }
 
+    /*
+     * Get watchlist by userId
+     */
+
     @GetMapping("/{userId}")
     public ResponseEntity<WatchListDto> getWatchListByUserId(@PathVariable String userId) {
         WatchListDto watchLists = watchListService.getWatchListByUserId(userId);
         return new ResponseEntity<>(watchLists, HttpStatus.OK);
     }
 
-
+    /*
+     * Remove course from watchlist
+     */
     @DeleteMapping("/removeCourse")
     public ResponseEntity<WatchList> removeCourseFromWatchList(@RequestBody Map<String, String> requestBody) {
         String userId = requestBody.get("userId");

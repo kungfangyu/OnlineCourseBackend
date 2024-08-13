@@ -7,8 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
+// This class is a model for the Comment entity. It contains the attributes of the Comment entity.
 @Document(collection = "Comment")
 @Data
 @NoArgsConstructor

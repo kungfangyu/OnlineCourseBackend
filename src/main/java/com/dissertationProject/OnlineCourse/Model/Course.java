@@ -12,6 +12,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
+// This class is a model for the Course entity. It contains the attributes of the Course entity.
 public class Course {
     @Id
     private String courseId;

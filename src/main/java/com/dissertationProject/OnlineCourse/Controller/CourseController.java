@@ -34,11 +34,18 @@ public class CourseController {
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
+    /*
+     * Get courses by category
+     */
     @GetMapping("/category")
     public ResponseEntity<List<CourseDto>> getCoursesByCategory(@RequestParam String category) {
         List<CourseDto> courses = courseService.getCoursesByCategory(category);
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
+
+    /*
+     * Get single course by courseId
+     */
 
     @GetMapping("/{courseId}")
     public ResponseEntity<CourseDto> getCourseById(@PathVariable String courseId) {

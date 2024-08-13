@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+// This class is a model for the WatchList entity. It contains the attributes of the WatchList entity.
 public class WatchList {
     @Id
     private String userId;

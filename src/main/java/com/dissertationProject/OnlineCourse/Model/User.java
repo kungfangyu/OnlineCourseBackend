@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 
+// This class is a model for the User entity. It contains the attributes of the User entity.
 public class User {
     @Id
     private String userId;
